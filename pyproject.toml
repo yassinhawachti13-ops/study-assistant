@@ -1,6 +1,8 @@
 [project]
 name = "study_assistant"
 version = "0.1.0"
-description = "A blank Python project for study_assistant."
+description = "A simple command-line study assistant."
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "sympy>=1.14.0",
+]
