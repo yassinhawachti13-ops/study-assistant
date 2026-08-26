@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Log | Study Assistant{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <p class="eyebrow">Build the habit</p>
+    <h1>Daily Log</h1>
+    <p>Write a short note about what you studied today.</p>
+  </section>
+
+  <section class="panel">
+    <form method="post">
+      <label for="entry">Today's study entry</label>
+      <textarea id="entry" name="entry" rows="5" placeholder="What did you work on today?" required></textarea>
+      <button type="submit">Save entry</button>
+    </form>
+  </section>
+
+  {% if saved %}
+    <section class="message success" role="status">Your study entry was saved.</section>
+  {% endif %}
+  {% if error %}
+    <section class="message error" role="alert">{{ error }}</section>
+  {% endif %}
+
+  <section class="entries-section">
+    <h2>Past entries</h2>
+    {% if entries %}
+      <div class="entries">
+        {% for item in entries %}
+          <article class="entry">
+            <time datetime="{{ item.date }}">{{ item.date }}</time>
+            <p>{{ item.entry }}</p>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-state">No study entries yet.</p>
+    {% endif %}
+  </section>
+{% endblock %}

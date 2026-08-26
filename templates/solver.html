@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Equation Solver | Study Assistant{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <p class="eyebrow">Math practice</p>
+    <h1>Equation Solver</h1>
+    <p>Enter an equation and let SymPy find the solution.</p>
+  </section>
+
+  <section class="panel">
+    <form method="post">
+      <label for="equation">Equation</label>
+      <input
+        id="equation"
+        name="equation"
+        type="text"
+        value="{{ equation }}"
+        placeholder="2*x + 3 = 9"
+        required
+      >
+      <p class="help-text">Use <code>*</code> for multiplication and <code>^</code> or <code>**</code> for powers.</p>
+      <button type="submit">Solve equation</button>
+    </form>
+  </section>
+
+  {% if error %}
+    <section class="message error" role="alert">{{ error }}</section>
+  {% elif solution is not none %}
+    <section class="panel result">
+      <h2>Solution</h2>
+      <pre>{{ solution }}</pre>
+    </section>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Exercise Library | Study Assistant{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <p class="eyebrow">Practice materials</p>
+    <h1>Exercise Library</h1>
+    <p>Open a PDF to start an exercise.</p>
+  </section>
+
+  <section class="panel">
+    {% if exercise_files %}
+      <ul class="file-list">
+        {% for filename in exercise_files %}
+          <li>
+            <a href="{{ url_for('exercise_file', filename=filename) }}" target="_blank" rel="noopener">
+              <span>{{ filename }}</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-state">No PDF exercises have been added yet.</p>
+      <p class="help-text">Add PDF files to <code>static/exercises/</code> and they will appear here.</p>
+    {% endif %}
+  </section>
+{% endblock %}

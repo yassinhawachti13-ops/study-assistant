@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Study Assistant{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <p class="eyebrow">Your study workspace</p>
+    <h1>Make a little progress every day.</h1>
+    <p class="intro">
+      Solve equations, find practice exercises, and keep a simple record of
+      what you studied.
+    </p>
+  </section>
+
+  <section class="feature-grid" aria-label="Study tools">
+    <a class="feature-card" href="{{ url_for('solver') }}">
+      <h2>Equation Solver</h2>
+      <p>Use SymPy to solve equations from your browser.</p>
+      <span>Open solver &rarr;</span>
+    </a>
+    <a class="feature-card" href="{{ url_for('exercises') }}">
+      <h2>Exercise Library</h2>
+      <p>Browse the PDF exercises saved in your library.</p>
+      <span>Browse exercises &rarr;</span>
+    </a>
+    <a class="feature-card" href="{{ url_for('daily_log') }}">
+      <h2>Daily Log</h2>
+      <p>Write down what you worked on today and review past entries.</p>
+      <span>Open daily log &rarr;</span>
+    </a>
+  </section>
+{% endblock %}
