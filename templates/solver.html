@@ -5,32 +5,151 @@
 {% block content %}
   <section class="page-heading">
     <p class="eyebrow">Math practice</p>
-    <h1>Equation Solver</h1>
-    <p>Enter an equation and let SymPy find the solution.</p>
+    <h1>Math Solver</h1>
+    <p>Work through equations, integrals, and limits with SymPy.</p>
   </section>
 
-  <section class="panel">
-    <form method="post">
-      <label for="equation">Equation</label>
-      <input
-        id="equation"
-        name="equation"
-        type="text"
-        value="{{ equation }}"
-        placeholder="2*x + 3 = 9"
-        required
-      >
-      <p class="help-text">Use <code>*</code> for multiplication and <code>^</code> or <code>**</code> for powers.</p>
-      <button type="submit">Solve equation</button>
-    </form>
+  <section class="solver-section">
+    <div class="section-heading">
+      <p class="section-number">01</p>
+      <div>
+        <h2>Equation Solver</h2>
+        <p>Solve an equation for its unknown variable.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <form method="post">
+        <input type="hidden" name="action" value="equation">
+        <label for="equation">Equation</label>
+        <input
+          id="equation"
+          name="equation"
+          type="text"
+          value="{{ equation }}"
+          placeholder="2*x + 3 = 9"
+          required
+        >
+        <p class="help-text">Use <code>*</code> for multiplication and <code>^</code> or <code>**</code> for powers.</p>
+        <button type="submit">Solve equation</button>
+      </form>
+    </div>
+    {% if equation_error %}
+      <section class="message error" role="alert">{{ equation_error }}</section>
+    {% elif equation_solution is not none %}
+      <section class="panel result">
+        <h3>Solution</h3>
+        <pre>{{ equation_solution }}</pre>
+      </section>
+    {% endif %}
   </section>
 
-  {% if error %}
-    <section class="message error" role="alert">{{ error }}</section>
-  {% elif solution is not none %}
-    <section class="panel result">
-      <h2>Solution</h2>
-      <pre>{{ solution }}</pre>
-    </section>
-  {% endif %}
+  <section class="solver-section">
+    <div class="section-heading">
+      <p class="section-number">02</p>
+      <div>
+        <h2>Integral</h2>
+        <p>Enter an integral using SymPy syntax.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <form method="post">
+        <input type="hidden" name="action" value="integral">
+        <label for="integral">Integral expression</label>
+        <div class="input-with-button">
+          <input
+            id="integral"
+            name="integral"
+            type="text"
+            value="{{ integral }}"
+            placeholder="integrate(x**2, x)"
+            required
+          >
+          <button type="button" class="secondary-button" id="insert-integral">Insert ∫</button>
+        </div>
+        <p class="help-text">The ∫ button is a visual cue. Keep the expression in SymPy syntax, such as <code>integrate(x**2, x)</code>.</p>
+        <button type="submit">Evaluate integral</button>
+      </form>
+    </div>
+    {% if integral_error %}
+      <section class="message error" role="alert">{{ integral_error }}</section>
+    {% elif integral_solution is not none %}
+      <section class="panel result">
+        <h3>Integral result</h3>
+        <pre>{{ integral_solution }}</pre>
+      </section>
+    {% endif %}
+  </section>
+
+  <section class="solver-section limits-section">
+    <div class="section-heading">
+      <p class="section-number">03</p>
+      <div>
+        <h2>Limits</h2>
+        <p>A separate workspace for evaluating a limit.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <form method="post">
+        <input type="hidden" name="action" value="limit">
+        <div class="form-grid">
+          <div>
+            <label for="limit-expression">Expression</label>
+            <input
+              id="limit-expression"
+              name="limit_expression"
+              type="text"
+              value="{{ limit_expression }}"
+              placeholder="sin(x)/x"
+              required
+            >
+          </div>
+          <div>
+            <label for="limit-variable">Variable</label>
+            <input
+              id="limit-variable"
+              name="limit_variable"
+              type="text"
+              value="{{ limit_variable }}"
+              placeholder="x"
+              required
+            >
+          </div>
+          <div>
+            <label for="limit-target">Target value</label>
+            <input
+              id="limit-target"
+              name="limit_target"
+              type="text"
+              value="{{ limit_target }}"
+              placeholder="0"
+              required
+            >
+          </div>
+        </div>
+        <p class="help-text">Use <code>oo</code> for infinity.</p>
+        <button type="submit">Solve limit</button>
+      </form>
+    </div>
+    {% if limit_error %}
+      <section class="message error" role="alert">{{ limit_error }}</section>
+    {% elif limit_solution is not none %}
+      <section class="panel result">
+        <h3>Limit result</h3>
+        <pre>{{ limit_solution }}</pre>
+      </section>
+    {% endif %}
+  </section>
+
+  <script>
+    // Insert the visual integral symbol without submitting the form.
+    const integralInput = document.getElementById("integral");
+    const insertIntegralButton = document.getElementById("insert-integral");
+
+    insertIntegralButton.addEventListener("click", () => {
+      const start = integralInput.selectionStart ?? integralInput.value.length;
+      const end = integralInput.selectionEnd ?? start;
+      integralInput.setRangeText("∫ ", start, end, "end");
+      integralInput.focus();
+    });
+  </script>
 {% endblock %}

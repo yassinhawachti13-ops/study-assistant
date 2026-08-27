@@ -165,7 +165,74 @@ h1 {
   padding: 1.5rem;
 }
 
+.solver-section {
+  margin-bottom: 3rem;
+}
+
+.limits-section {
+  margin-bottom: 4rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 720px;
+  margin-bottom: 1rem;
+}
+
+.section-heading h2 {
+  margin-bottom: 0.2rem;
+  font-size: 1.5rem;
+}
+
+.section-heading p:last-child {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.section-number {
+  margin: 0.25rem 0 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
 form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.input-with-button input {
+  min-width: 0;
+}
+
+.secondary-button {
+  flex: 0 0 auto;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.secondary-button:hover,
+.secondary-button:focus {
+  background: #eef0ff;
+  color: var(--accent-dark);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr 0.9fr;
+  gap: 0.75rem;
+}
+
+.form-grid > div {
   display: grid;
   gap: 0.75rem;
 }
@@ -228,7 +295,7 @@ pre {
   white-space: pre-wrap;
 }
 
-.result h2 {
+.result h3 {
   margin-bottom: 0.75rem;
   font-size: 1.15rem;
 }
@@ -323,5 +390,11 @@ pre {
 
   .feature-card p {
     min-height: auto;
+  }
+
+  .input-with-button,
+  .form-grid {
+    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }

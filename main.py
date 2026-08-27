@@ -15,7 +15,7 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from sympy import Eq, SympifyError, solve, sympify
+from sympy import Eq, SympifyError, Symbol, integrate, limit, oo, solve, sympify
 
 
 BASE_DIR = Path(__file__).parent
@@ -48,6 +48,35 @@ def solve_equation_text(equation_text: str) -> str:
     variables = sorted(equation.free_symbols, key=str)
     solutions = solve(equation, variables)
     return str(solutions) if solutions else "No solution was found."
+
+
+def solve_integral_text(integral_text: str) -> str:
+    """Evaluate an integral written with SymPy syntax."""
+    # The symbol is a visual cue inserted by the page button.
+    integral_text = integral_text.strip().lstrip("∫").strip().replace("^", "**")
+    if not integral_text:
+        raise ValueError("Please enter an integral.")
+
+    # SymPy syntax example: integrate(x**2, x)
+    expression = sympify(integral_text, locals={"integrate": integrate})
+    return str(expression)
+
+
+def solve_limit_text(expression_text: str, variable_text: str, target_text: str) -> str:
+    """Evaluate a limit using an expression, variable, and target value."""
+    expression_text = expression_text.strip().replace("^", "**")
+    variable_text = variable_text.strip()
+    target_text = target_text.strip().replace("^", "**")
+
+    if not expression_text or not variable_text or not target_text:
+        raise ValueError("Please fill in the expression, variable, and target value.")
+    if not variable_text.isidentifier():
+        raise ValueError("The variable must be a simple name such as x.")
+
+    expression = sympify(expression_text)
+    variable = Symbol(variable_text)
+    target = sympify(target_text, locals={"oo": oo})
+    return str(limit(expression, variable, target))
 
 
 def load_daily_entries() -> list[dict[str, str]]:
@@ -88,23 +117,60 @@ def home():
 
 @app.route("/solver", methods=["GET", "POST"])
 def solver():
-    """Display the equation form and solve submitted equations."""
-    solution = None
-    error = None
+    """Display the solver sections and handle submitted forms."""
     equation = ""
+    equation_solution = None
+    equation_error = None
+    integral = ""
+    integral_solution = None
+    integral_error = None
+    limit_expression = ""
+    limit_variable = ""
+    limit_target = ""
+    limit_solution = None
+    limit_error = None
 
     if request.method == "POST":
-        equation = request.form.get("equation", "")
-        try:
-            solution = solve_equation_text(equation)
-        except (SympifyError, TypeError, ValueError, NotImplementedError) as exc:
-            error = f"Could not solve that equation: {exc}"
+        action = request.form.get("action")
+
+        if action == "equation":
+            equation = request.form.get("equation", "")
+            try:
+                equation_solution = solve_equation_text(equation)
+            except (SympifyError, TypeError, ValueError, NotImplementedError) as exc:
+                equation_error = f"Could not solve that equation: {exc}"
+        elif action == "integral":
+            integral = request.form.get("integral", "")
+            try:
+                integral_solution = solve_integral_text(integral)
+            except (SympifyError, TypeError, ValueError, NotImplementedError) as exc:
+                integral_error = f"Could not evaluate that integral: {exc}"
+        elif action == "limit":
+            limit_expression = request.form.get("limit_expression", "")
+            limit_variable = request.form.get("limit_variable", "")
+            limit_target = request.form.get("limit_target", "")
+            try:
+                limit_solution = solve_limit_text(
+                    limit_expression,
+                    limit_variable,
+                    limit_target,
+                )
+            except (SympifyError, TypeError, ValueError, NotImplementedError) as exc:
+                limit_error = f"Could not evaluate that limit: {exc}"
 
     return render_template(
         "solver.html",
         equation=equation,
-        solution=solution,
-        error=error,
+        equation_solution=equation_solution,
+        equation_error=equation_error,
+        integral=integral,
+        integral_solution=integral_solution,
+        integral_error=integral_error,
+        limit_expression=limit_expression,
+        limit_variable=limit_variable,
+        limit_target=limit_target,
+        limit_solution=limit_solution,
+        limit_error=limit_error,
     )
 
 
